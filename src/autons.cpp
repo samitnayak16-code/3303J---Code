@@ -37,92 +37,143 @@ void odom_constants(){
   chassis.drive_min_voltage = 0;
 }
 
+bool flagMatchLoad1 = false;
+bool flagMatchLoad2 = false;
+bool flagMatchLoad3 = false;
+bool flagMatchLoad4 = false;
+bool flagIntakeJam = false;
+bool Autocontrol = true;
+
+void matchloadTask() 
+{
+  while(Autocontrol)
+  {
+    if(flagMatchLoad1)
+    {
+      wait(1100,msec);           // wait 1000 milliseconds
+      MatchLoad.set(true);        // Activate piston
+      wait(200,msec);  
+      MatchLoad.set(false);
+      flagMatchLoad1 = false;
+    }
+    if(flagMatchLoad2)
+    {
+      wait(700,msec);           // wait 800 milliseconds
+      MatchLoad.set(true);        // Activate piston
+      flagMatchLoad2 = false;
+    }
+    if(flagMatchLoad3)
+    {
+      wait(300,msec);           
+      MatchLoad.set(true);        // Activate piston
+      wait(300,msec);  
+      MatchLoad.set(false); 
+      flagMatchLoad3 = false;
+    }
+    if(flagMatchLoad4)
+    {
+      wait(600,msec);           // wait 800 milliseconds
+      MatchLoad.set(true);        // Activate piston
+      flagMatchLoad2 = false;
+    }
+    if(flagIntakeJam)
+    {
+      if (fabs(Intake1.velocity(rpm)) < 5 && Intake1.current() > 2.5)
+      {
+        // Reversa breve para liberar
+        Intake1.spin(reverse, 100, percent);
+        wait(150, msec);
+
+        // Breif reverse to realease
+        Intake1.spin(forward, 100, percent);
+        // Forward
+        wait(20, msec);
+      }
+      else
+      {
+        Intake1.spin(forward, 100, percent);
+      }
+    }
+
+    wait(20,msec);
+  }
+
+}
+
 /**
  * The expected behavior is to return to the start position.
  */
+//Command Key
+//chassis.drive_to_point(-0.1,-1.8);
+// chassis.drive_max_voltage = 5;
+// chassis.set_coordinates(0, 0, 0);
+// Intake1.spin(forward, 100, pct);
+// MatchLoad.set(true);
+// chassis.set_drive_exit_conditions(1.5, 100, 900);
+// chassis.set_turn_exit_conditions(1, 100, 3000);
+// chassis.heading_max_voltage = 7;
+// chassis.drive_to_pose(-2,-68,130);
+// wait(650,msec);
+// chassis.drive_with_voltage(-1, -1);
+// chassis.drive_min_voltage = 0;
 
 void drive_test(){
-  //first set of balls
+
+  // Starting
+  Descore.set(false);
   odom_constants();
-  chassis.drive_max_voltage = 12;
+  thread matchloadThread(matchloadTask);
+
+  // First set of balls
+  chassis.drive_max_voltage = 9;
+  flagMatchLoad2 = true;
   chassis.set_coordinates(0, 0, 0);
   Intake1.spin(forward, 100, pct);
-  Intake2.spin(reverse, 100, pct);
+  Intake2.spin(reverse, 20, pct);
+  chassis.set_drive_exit_conditions(1, 100, 900);
   chassis.drive_distance(14);
-  chassis.drive_max_voltage = 12;
-
+  chassis.set_turn_exit_conditions(1, 100, 300);
   chassis.turn_to_angle(27);
-  MatchLoad.set(true);
-
+  chassis.set_drive_exit_conditions(1, 100, 900);
   chassis.drive_distance(16);
-  MatchLoad.set(true);
+  flagIntakeJam = true;
 
-
-  //matchloader
-  chassis.drive_max_voltage = 8;
-   Intake1.spin(forward, 40, pct);
-  Intake2.spin(reverse, 40, pct);
+  // Matchloader
   chassis.turn_to_angle(127);
-  chassis.drive_distance(30);//30
-
+  chassis.drive_with_voltage(5, 5);
+  wait(900,msec);
+  chassis.set_turn_exit_conditions(1, 100, 300);
   chassis.turn_to_angle(180);
-  Intake1.spin(forward, 100, pct);
-  Intake2.spin(reverse, 100, pct);
-  MatchLoad.set(true);
-  chassis.drive_max_voltage = 6;
+  chassis.drive_max_voltage = 4;
+  chassis.set_drive_exit_conditions(1, 100, 900);
+  chassis.set_turn_exit_conditions(1, 100, 300);
+  chassis.drive_to_pose(30,-20, 180);
+  wait(300,msec);
+  chassis.drive_max_voltage = 10;
   
-  Intake1.spin(forward, -100, pct);
-  Intake2.spin(reverse, -100, pct);
-  wait(100,msec);
-  Intake1.spin(forward, 100, pct);
-  Intake2.spin(reverse, 50, pct);
-  chassis.drive_distance(20, 180);
-  wait(600,msec);
-
-    chassis.drive_max_voltage = 10;
-  //scoring
-  chassis.turn_to_angle(180);
-    chassis.drive_distance(-10);
-
-  //chassis.drive_to_point(0,-30);
-  Intake1.spin(forward, 0, pct);
-  Intake2.spin(reverse, 0, pct);
-  chassis.turn_to_angle(190);
-  chassis.drive_distance(-25);
-  MatchLoad.set(false);
-
+  // Scoring
+  chassis.heading_max_voltage = 7;
+  chassis.set_drive_exit_conditions(1, 100, 900);  
+  chassis.drive_to_point(30,40);
+  chassis.set_turn_exit_conditions(1, 100, 300);
+  chassis.drive_to_pose(30,-20, 180);
+  flagIntakeJam = true;
   Intake1.spin(forward, 100, pct);
   Intake2.spin(forward, 100, pct);
-  wait(2300,msec);
-  Descore.set(false);
-  Intake1.spin(forward, 0, pct);
-  Intake2.spin(forward, 0, pct);
-  chassis.drive_distance(8);
-  chassis.turn_to_angle(-90);
-  chassis.drive_distance(10.5);
-  chassis.turn_to_angle(5);
-  chassis.drive_max_voltage = 5;
+  wait(2000,msec);
 
-  chassis.drive_distance(21);
-  wait(3000,msec);
-
-
-  //chassis.drive_max_voltage = 10;
+  // Push
+  chassis.drive_with_voltage(5, 5);
+  wait(400,msec);
+  chassis.set_turn_exit_conditions(1, 100, 300);
+  chassis.turn_to_angle(90);
+  chassis.drive_with_voltage(5, 5);
+  wait(400,msec);
+  chassis.set_turn_exit_conditions(1, 100, 300);
+  chassis.turn_to_angle(184);
+  chassis.drive_with_voltage(-5, -5);
+  wait(400,msec);
   
-  //chassis.set_coordinates(0, 0, 0);
-  //chassis.turn_to_point(10,0, -90);
- 
-  //Descore.set(true);
-
-  //chassis.drive_distance(13);
-
-
-
-
-//    MatchLoad.set(true);
-//   Intake2.spin(forward, 100, pct);
-
-
 }
 
 /**
@@ -135,22 +186,26 @@ void turn_test(){
   chassis.set_coordinates(0, 0, 0);
   Intake1.spin(forward, 100, pct);
   Intake2.spin(reverse, 100, pct);
-  chassis.drive_distance(14);
-  chassis.drive_max_voltage = 12;
+  chassis.drive_distance(13.5);
+  //chassis.drive_max_voltage = 12;
 
   chassis.turn_to_angle(-27);
-  chassis.drive_distance(6);
+  chassis.drive_distance(6.5);
   MatchLoad.set(true);
 
-  chassis.drive_distance(8);
-  chassis.turn_to_angle(-135);
-  chassis.drive_distance(-11);
+  chassis.drive_distance(10);
+  chassis.turn_to_angle(-140);
+  chassis.drive_distance(-15.25);
   Intake1.spin(forward, 100, pct);
-  Intake2.spin(forward, 100, pct);
+  Intake2.spin(reverse, 50, pct);
+  CenterGoal.set(true);
+  wait(4000,msec);
+  
+  chassis.drive_distance(25);
+  
 
 
-
-  MatchLoad.set(true);
+  
 
   /*
  
@@ -221,8 +276,100 @@ void turn_test(){
  */
 
 void swing_test(){
-  chassis.left_swing_to_angle(90);
-  chassis.right_swing_to_angle(0);
+  Descore.set(false);
+
+  //first set of balls
+  odom_constants();
+  chassis.drive_max_voltage = 6;
+  chassis.set_coordinates(0, 0, 0);
+  Intake1.spin(forward, 100, pct);
+  Intake2.spin(reverse, 20, pct);
+  chassis.drive_distance(14);
+  chassis.drive_max_voltage = 12;
+
+  chassis.turn_to_angle(-27);
+  MatchLoad.set(true);
+
+  chassis.drive_distance(16);
+  MatchLoad.set(true);
+
+
+  //matchloader
+  chassis.drive_max_voltage = 6;
+   Intake1.spin(forward, 40, pct);
+  Intake2.spin(reverse, 40, pct);
+  chassis.turn_to_angle(-127);
+  chassis.drive_distance(30.5);//30
+
+  chassis.turn_to_angle(180);
+  Intake1.spin(forward, 100, pct);
+  Intake2.spin(reverse, 100, pct);
+  MatchLoad.set(true);
+  chassis.drive_max_voltage = 4;
+  
+  Intake1.spin(forward, -100, pct);
+  Intake2.spin(reverse, -100, pct);
+  wait(100,msec);
+  Intake1.spin(forward, 100, pct);
+  Intake2.spin(reverse, 50, pct);
+  chassis.drive_distance(20, 180);
+  wait(300,msec);
+    chassis.drive_max_voltage = 10;
+  //scoring
+  chassis.turn_to_angle(-189);
+  //   Intake1.spin(forward, 0, pct);
+  // Intake2.spin(reverse, 0, pct);
+  //chassis.set_coordinates(0, 0, 0);
+
+  //chassis.drive_to_point(-0.1,-1.8);
+
+
+chassis.drive_distance(-28);
+  // Intake1.spin(forward, 0, pct);
+  // Intake2.spin(reverse, 0, pct);
+  // chassis.turn_to_angle(189);
+  // chassis.drive_distance(-28);
+  MatchLoad.set(false);
+  Intake1.spin(reverse, 50, pct);
+  Intake2.spin(reverse, 50, pct);
+  wait(200,msec);
+  Intake1.spin(reverse,60, pct);
+  Intake2.spin(reverse, 80, pct);
+  wait(100,msec);
+
+  Intake1.spin(forward, 100, pct);
+  Intake2.spin(forward, 100, pct);
+  chassis.drive_distance(-3);
+  wait(5000,msec);
+  Descore.set(false);
+  //Intake1.spin(forward, 0, pct);
+  //Intake2.spin(forward, 0, pct);
+  // chassis.drive_distance(8);
+  // chassis.turn_to_angle(-90);
+  // chassis.drive_distance(10.5);
+  // chassis.turn_to_angle(0);
+  // chassis.drive_max_voltage = 5;
+
+  // chassis.drive_distance(21);
+  // wait(3000,msec);
+
+
+  //chassis.drive_max_voltage = 10;
+  
+  //chassis.set_coordinates(0, 0, 0);
+  //chassis.turn_to_point(10,0, -90);
+ 
+  //Descore.set(true);
+
+  //chassis.drive_distance(13);
+
+
+
+
+//    MatchLoad.set(true);
+//   Intake2.spin(forward, 100, pct);
+
+
 }
 
 /**
@@ -230,12 +377,8 @@ void swing_test(){
  */
 
 void full_test(){
-  chassis.drive_distance(24);
-  chassis.turn_to_angle(-45);
-  chassis.drive_distance(-36);
-  chassis.right_swing_to_angle(-90);
-  chassis.drive_distance(24);
-  chassis.turn_to_angle(0);
+  Intake1.spin(forward, 100, pct);
+
 }
 
 /**

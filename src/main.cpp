@@ -127,15 +127,15 @@ void pre_auton()
         Controller1.Screen.clearLine(3);
       }
       Controller1.Screen.setCursor(3, 1);
-      switch(1)
+      switch(0)
       {
         case 0:
-          Brain.Screen.printAt(5, 80, "SOLO AWP Signature");
-          Controller1.Screen.print("SOLO AWP Signature");
+          Brain.Screen.printAt(5, 80, "RightSide 7 + Push");
+          Controller1.Screen.print("RightSide 7 + Push");
           break;
         case 1:
-          Brain.Screen.printAt(5, 80, "HALF SOLO AWP Sig");
-          Controller1.Screen.print("HALF SOLO AWP Sig");
+          Brain.Screen.printAt(5, 80, "LeftSide 7 + Push");
+          Controller1.Screen.print("LeftSide 7 + Push");
           break;
         case 2:
           Brain.Screen.printAt(5, 80, "RIGHT Low Goal+Push");
@@ -187,7 +187,7 @@ void pre_auton()
       double delta = currentPos - lastPos;
 
       // Detection of rising or falling edge with threshold to avoid noise
-      const double threshold = 7; // Adjust if you want it to be more or less sensitive.
+      const double threshold = 6; // Adjust if you want it to be more or less sensitive.
 
       if (delta > threshold && !movedUp) 
       {
@@ -230,7 +230,7 @@ void autonomous(void)
 {
   chassis.drive_stop(hold);
   auto_started = true;
-  switch(1)
+  switch(0)
   { 
     case 0:
     //  tank_odom_test();
@@ -354,9 +354,9 @@ void usercontrol(void)
         Intake1.spin(fwd, 0, pct);
         Intake2.spin(fwd, 0, pct);
         if (Controller1.ButtonR1.pressing()) 
-            Descore.set(false);
-        else
             Descore.set(true);
+        else
+            Descore.set(false);
     } 
     else if (Controller1.ButtonL1.pressing() && Controller1.ButtonR1.pressing()) 
     { 
@@ -418,7 +418,7 @@ void usercontrol(void)
     else if (Controller1.ButtonR2.pressing()) 
     {
       Intake1.spin(forward, 100, pct);
-      Intake2.spin(reverse, 100, pct);
+      Intake2.spin(reverse, 50, pct);
       CenterGoal.set(true);
       
     } 
