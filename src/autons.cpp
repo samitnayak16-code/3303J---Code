@@ -42,7 +42,8 @@ bool flagMatchLoad2 = false;
 bool flagMatchLoad3 = false;
 bool flagMatchLoad4 = false;
 bool flagIntakeJam = false;
-bool Autocontrol = true;
+bool Autocontrol = false;
+bool Scoring1 = true;
 
 void matchloadTask() 
 {
@@ -58,7 +59,7 @@ void matchloadTask()
     }
     if(flagMatchLoad2)
     {
-      wait(700,msec);           // wait 800 milliseconds
+      wait(750,msec);           // wait 800 milliseconds
       MatchLoad.set(true);        // Activate piston
       flagMatchLoad2 = false;
     }
@@ -75,6 +76,23 @@ void matchloadTask()
       wait(600,msec);           // wait 800 milliseconds
       MatchLoad.set(true);        // Activate piston
       flagMatchLoad2 = false;
+    }
+    if(Scoring1)
+    {
+      if (fabs(Intake2.velocity(rpm)) < 5 )
+      {
+        chassis.drive_distance(0.2);
+        Intake1.spin(forward, 100, percent);
+        Intake2.spin(forward, 100, percent);
+        
+
+      }
+      else
+      {
+        Intake1.spin(forward, 100, percent);
+        Intake2.spin(forward, 100, percent);
+
+      }
     }
     if(flagIntakeJam)
     {
@@ -118,61 +136,64 @@ void matchloadTask()
 // chassis.drive_min_voltage = 0;
 
 void drive_test(){
-
-  // Starting
-  Descore.set(false);
-  odom_constants();
-  thread matchloadThread(matchloadTask);
-
-  // First set of balls
-  chassis.drive_max_voltage = 9;
-  flagMatchLoad2 = true;
-  chassis.set_coordinates(0, 0, 0);
-  Intake1.spin(forward, 100, pct);
-  Intake2.spin(reverse, 20, pct);
-  chassis.set_drive_exit_conditions(1, 100, 900);
-  chassis.drive_distance(14);
-  chassis.set_turn_exit_conditions(1, 100, 300);
-  chassis.turn_to_angle(27);
-  chassis.set_drive_exit_conditions(1, 100, 900);
-  chassis.drive_distance(16);
-  flagIntakeJam = true;
-
-  // Matchloader
-  chassis.turn_to_angle(127);
-  chassis.drive_with_voltage(5, 5);
-  wait(900,msec);
-  chassis.set_turn_exit_conditions(1, 100, 300);
   chassis.turn_to_angle(180);
-  chassis.drive_max_voltage = 4;
-  chassis.set_drive_exit_conditions(1, 100, 900);
-  chassis.set_turn_exit_conditions(1, 100, 300);
-  chassis.drive_to_pose(30,-20, 180);
-  wait(300,msec);
-  chassis.drive_max_voltage = 10;
-  
-  // Scoring
-  chassis.heading_max_voltage = 7;
-  chassis.set_drive_exit_conditions(1, 100, 900);  
-  chassis.drive_to_point(30,40);
-  chassis.set_turn_exit_conditions(1, 100, 300);
-  chassis.drive_to_pose(30,-20, 180);
-  flagIntakeJam = true;
-  Intake1.spin(forward, 100, pct);
-  Intake2.spin(forward, 100, pct);
-  wait(2000,msec);
+  // Starting
+  // Descore.set(false);
+  // odom_constants();
+  // thread matchloadThread(matchloadTask);
 
-  // Push
-  chassis.drive_with_voltage(5, 5);
-  wait(400,msec);
-  chassis.set_turn_exit_conditions(1, 100, 300);
-  chassis.turn_to_angle(90);
-  chassis.drive_with_voltage(5, 5);
-  wait(400,msec);
-  chassis.set_turn_exit_conditions(1, 100, 300);
-  chassis.turn_to_angle(184);
-  chassis.drive_with_voltage(-5, -5);
-  wait(400,msec);
+  // // First set of balls
+  // chassis.drive_max_voltage = 9;
+  // flagMatchLoad2 = true;
+  // chassis.set_coordinates(0, 0, 0);
+  // Intake1.spin(forward, 100, pct);
+  // Intake2.spin(reverse, 20, pct);
+  // chassis.set_drive_exit_conditions(1.5, 100, 900);
+  // chassis.drive_distance(14);
+  // chassis.set_turn_exit_conditions(1.5, 100, 300);
+  // chassis.turn_to_angle(27);
+  // chassis.set_drive_exit_conditions(1.5, 100, 900);
+  // chassis.drive_distance(16);
+  // flagIntakeJam = true;
+
+  // // Matchloader
+  // chassis.turn_to_angle(127);
+  // chassis.drive_with_voltage(8, 8);
+  // wait(1150,msec);
+  // chassis.set_turn_exit_conditions(1, 100, 300);
+  // chassis.turn_to_angle(180);
+  // chassis.drive_max_voltage = 7;
+  // chassis.set_drive_exit_conditions(1, 100, 900);
+  // chassis.set_turn_exit_conditions(1, 100, 300);
+  // chassis.drive_to_pose(35,-21, 180);
+  // wait(350,msec);
+  // chassis.drive_max_voltage = 10;
+  
+  // // Scoring
+  // chassis.set_drive_exit_conditions(1, 100, 900);   
+  // chassis.drive_to_point(35,15.8);
+  // chassis.set_turn_exit_conditions(1, 100, 300);
+  // chassis.drive_to_pose(35,15.8, 180);
+  // chassis.drive_with_voltage(0, 0);
+  // Intake1.spin(forward, 100, pct);
+  // Intake2.spin(forward, 100, pct);
+  // chassis.drive_distance(0.15);
+  // chassis.set_coordinates(0, 0, 0);
+  // flagIntakeJam = true;
+  // Scoring1 = true;
+  // wait(1500,msec);
+
+  // // Push
+  // chassis.drive_with_voltage(5, 5);
+  // wait(400,msec);
+  // chassis.set_turn_exit_conditions(1, 100, 300);
+  // chassis.turn_to_angle(90);
+  // chassis.drive_with_voltage(5, 5);
+  // wait(400,msec);
+  // chassis.set_turn_exit_conditions(1, 100, 300);
+  // chassis.turn_to_angle(184);
+  // chassis.drive_with_voltage(-5, -5);
+  // wait(400,msec);
   
 }
 
