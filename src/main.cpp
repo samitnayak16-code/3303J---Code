@@ -22,11 +22,7 @@ Drive chassis(
 //HOLONOMIC_TWO_ROTATION
 //
 //Write it here:
-<<<<<<< HEAD
-TANK_TWO_ENCODER,
-=======
 TANK_TWO_ROTATION,
->>>>>>> aed5e2c (fresh start)
 
 //Add the names of your Drive motors into the motor groups below, separated by commas, i.e. motor_group(Motor1,Motor2,Motor3).
 //You will input whatever motor names you chose when you configured your robot using the sidebar configurer, they don't have to be "Motor1" and "Motor2".
@@ -64,11 +60,7 @@ PORT10,
 
 //FOR HOLONOMIC DRIVES ONLY: Input your drive motors by position. This is only necessary for holonomic drives, otherwise this section can be left alone.
 //LF:      //RF:    
-<<<<<<< HEAD
-PORT1,     -PORT5,
-=======
 PORT6,     -PORT5,
->>>>>>> aed5e2c (fresh start)
 
 //LB:      //RB: 
 PORT3,     -PORT4,
@@ -97,11 +89,7 @@ PORT2,
 
 );
 
-<<<<<<< HEAD
-int current_auton_selection = 1;
-=======
 int current_auton_selection = 0;
->>>>>>> aed5e2c (fresh start)
 bool auto_started = false;
 double lastPos = 0;
 bool movedUp = false;
@@ -112,12 +100,8 @@ void pre_auton()
   vexcodeInit();
   default_constants();
   chassis.set_coordinates(0, 0, 0);
-<<<<<<< HEAD
   ColorSortSensor.setLight(ledState::on);
   ColorSortSensor.setLightPower(100);
-=======
-
->>>>>>> aed5e2c (fresh start)
   Brain.Screen.setFont(vex::fontType::mono40);
   Intake2.setPosition(0,degrees);
   int last_selection = -1;
@@ -127,23 +111,13 @@ void pre_auton()
     {
       if(ALLIANCE_COLOR == RED)
       {
-<<<<<<< HEAD
         Brain.Screen.clearScreen(red);
         Brain.Screen.setFillColor(vex::color::red);
       }
       else
       {
-        Brain.Screen.clearScreen(blue);
-        Brain.Screen.setFillColor(vex::color::blue);
-=======
         Brain.Screen.clearScreen(yellow);
         Brain.Screen.setFillColor(vex::color::yellow);
-      }
-      else
-      {
-        Brain.Screen.clearScreen(yellow);
-        Brain.Screen.setFillColor(vex::color::yellow);
->>>>>>> aed5e2c (fresh start)
       }
       Brain.Screen.printAt(5, 40, "Battery: %d   %", Brain.Battery.capacity());
       
@@ -152,7 +126,6 @@ void pre_auton()
         last_selection = current_auton_selection; 
         Controller1.Screen.clearLine(3);
       }
-<<<<<<< HEAD
       Controller1.Screen.setCursor(3, 1);
       switch(0)
       {
@@ -208,7 +181,6 @@ void pre_auton()
           Brain.Screen.printAt(5, 80, "Skills");
           Controller1.Screen.print("Skills");
           break;
-=======
 
       Controller1.Screen.setCursor(3, 1);
       switch(2)
@@ -270,13 +242,8 @@ void pre_auton()
         else        
             current_auton_selection--;
       }
-<<<<<<< HEAD
-      if (current_auton_selection > 12) current_auton_selection = 0;
-      if (current_auton_selection < 0) current_auton_selection = 12;
-=======
       if (current_auton_selection > 3) current_auton_selection = 0;
       if (current_auton_selection < 0) current_auton_selection = 3;
->>>>>>> aed5e2c (fresh start)
       wait(10,msec);
     }
   }
@@ -285,50 +252,6 @@ void autonomous(void)
 {
   chassis.drive_stop(hold);
   auto_started = true;
-<<<<<<< HEAD
-  switch(0)
-  { 
-    case 0:
-    //  tank_odom_test();
-      drive_test();
-      break;
-    case 1:         
-      turn_test();
-       //break;
-    // case 2:
-    //   RightSide_1LowGoalPush();  
-    //   break;
-    // case 3:
-    //   RightSide_1LowGoal();  
-    //   break;
-    // case 4:
-    //   RightSideRushPush();
-    //   break;
-    // case 5:
-    //   RightSideRush();
-    //   break;
-    // case 6:
-    //   RightSideSUPERRush();
-    //   break;
-    // case 7:
-    //   LeftSide_MiddleGoalPush();
-    //   break;
-    // case 8:
-    //   LeftSide_MiddleGoal();
-    //   break;
-    // case 9:
-    //   LeftSideRushPush();
-    //   break;
-    // case 10:
-    //   LeftSideRush();
-    //   break;
-    // case 11:
-    //   LeftSideSUPERRush();
-    //   break;
-    // case 12:
-    //   Skills();
-    //   break;
-=======
   switch(1)
   { 
     case 0:
@@ -346,7 +269,6 @@ void autonomous(void)
     case 4:
        LeftSide4_3();  
        break;
->>>>>>> aed5e2c (fresh start)
  }
 }
 
@@ -389,23 +311,14 @@ void usercontrol(void)
 
     if(!IMU.isCalibrating())
     {
-<<<<<<< HEAD
       Brain.Screen.setFillColor(vex::color::yellow);
       Brain.Screen.clearScreen(yellow);
-=======
-      Brain.Screen.setFillColor(vex::color::red);
-      Brain.Screen.clearScreen(cyan);
->>>>>>> aed5e2c (fresh start)
       Brain.Screen.setPenColor(vex::color::black);
       Brain.Screen.setFont(vex::fontType::mono60);
       if(ALLIANCE_COLOR == RED)
       {
         Brain.Screen.setPenColor(vex::color::red);
-<<<<<<< HEAD
         Brain.Screen.printAt(5,40, "RED ALLIANCE");
-=======
-        Brain.Screen.printAt(5,40, "HOLAAAAA");
->>>>>>> aed5e2c (fresh start)
       }
       else
       {
@@ -435,10 +348,7 @@ void usercontrol(void)
 
     if (Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) 
     {
-<<<<<<< HEAD
-=======
         MatchLoad.set(false);
->>>>>>> aed5e2c (fresh start)
         Intake1.spin(fwd, 0, pct);
         Intake2.spin(fwd, 0, pct);
         if (Controller1.ButtonR1.pressing()) 
@@ -474,7 +384,6 @@ void usercontrol(void)
       Intake1.spin(reverse, 100,pct);
       Intake2.spin(reverse, 100,pct);
     } 
-<<<<<<< HEAD
     else if (Controller1.ButtonR1.pressing()) 
     {
       // if(colorSort == true)
@@ -503,7 +412,6 @@ void usercontrol(void)
       // }
     
       Intake1.spin(fwd, 100,pct);
-=======
     else if (Controller1.ButtonA.pressing()) 
     {
       Intake1.spin(reverse, 0,pct);
@@ -514,38 +422,30 @@ void usercontrol(void)
     {
       Intake1.spin(forward, 100,pct); 
       Intake2.spin(forward, 100,pct); 
->>>>>>> aed5e2c (fresh start)
     } 
     else if (Controller1.ButtonR2.pressing()) 
     {
       Intake1.spin(forward, 100, pct);
-<<<<<<< HEAD
       Intake2.spin(reverse, 50, pct);
       CenterGoal.set(true);
       
     } 
     else if (Controller1.ButtonUp.pressing()) 
     {
-
       Blocker.set(blockerstate);
       blockerstate = !blockerstate;
     }
-=======
       Intake2.spin(reverse, 20, pct);
       CenterGoal.set(true);
       
     } 
->>>>>>> aed5e2c (fresh start)
     else 
     {
       Intake1.spin(forward, 0, pct);
       Intake2.spin(forward, 0,pct);
       CenterGoal.set(false);
       MatchLoad.set(false);
-<<<<<<< HEAD
       Blocker.set(false);
-=======
->>>>>>> aed5e2c (fresh start)
       //Descore.set(true);
     }
     if (Controller1.ButtonLeft.pressing()) 
